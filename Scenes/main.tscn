@@ -1,4 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bn1wn8ul1wcpf"]
+[gd_scene load_steps=5 format=3 uid="uid://bn1wn8ul1wcpf"]
+
+[ext_resource type="Script" uid="uid://cj8d8afgkc7lu" path="res://Scripts/main.gd" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://d06uhcgyf4fm1" path="res://Scripts/camera_3d.gd" id="2_bo1nx"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_7u77a"]
 
@@ -6,8 +9,9 @@
 background_mode = 1
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_jjgbg")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Planet1" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_7u77a")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -15,6 +19,7 @@ environment = SubResource("Environment_7u77a")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.9522865)
+script = ExtResource("2_bo1nx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.921534)
