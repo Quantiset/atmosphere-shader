@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn1wn8ul1wcpf"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_7u77a"]
+
+[sub_resource type="Environment" id="Environment_7u77a"]
+background_mode = 1
+
+[node name="Main" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_7u77a")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7u77a")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.9522865)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.921534)
