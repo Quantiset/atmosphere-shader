@@ -1,44 +1,96 @@
+# https://github.com/richardhyy/simple-free-look-camera-4/blob/master/camera.gd
+
 extends Camera3D
 
-@export var move_speed := 5.0
-@export var fast_speed := 20.0
-@export var mouse_sensitivity := 0.004
+const SHIFT_MULTIPLIER = 2.5
+const ALT_MULTIPLIER = 1.0 / SHIFT_MULTIPLIER
 
-var rotating := false
+@export_range(0.0, 1.0) var sensitivity = 0.25
 
-func _unhandled_input(event):
-	# Toggle looking around when RMB is held
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		rotating = event.pressed
-		if rotating:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		else:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+var _mouse_position = Vector2(0.0, 0.0)
+var _total_pitch = 0.0
 
-	# Look around while holding RMB
-	if rotating and event is InputEventMouseMotion:
-		rotation.y -= event.relative.x * mouse_sensitivity
-		rotation.x -= event.relative.y * mouse_sensitivity
-		rotation.x = clamp(rotation.x, deg_to_rad(-89), deg_to_rad(89))
+var _direction = Vector3(0.0, 0.0, 0.0)
+var _velocity = Vector3(0.0, 0.0, 0.0)
+var _acceleration = 30
+var _deceleration = -10
+var _vel_multiplier = 4
+
+# Keyboard state
+var _w = false
+var _s = false
+var _a = false
+var _d = false
+var _q = false
+var _e = false
+var _shift = false
+var _alt = false
+
+func _input(event):
+	
+	if event is InputEventMouseMotion:
+		_mouse_position = event.relative
+	
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT: # Only allows rotation if right click down
+				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if event.pressed else Input.MOUSE_MODE_VISIBLE)
+			MOUSE_BUTTON_WHEEL_UP: # Increases max velocity
+				_vel_multiplier = clamp(_vel_multiplier * 1.1, 0.2, 20)
+			MOUSE_BUTTON_WHEEL_DOWN: # Decereases max velocity
+				_vel_multiplier = clamp(_vel_multiplier / 1.1, 0.2, 20)
+
+	# Receives key input
+	if event is InputEventKey:
+		match event.keycode:
+			KEY_W:
+				_w = event.pressed
+			KEY_S:
+				_s = event.pressed
+			KEY_A:
+				_a = event.pressed
+			KEY_D:
+				_d = event.pressed
+			KEY_Q:
+				_q = event.pressed
+			KEY_E:
+				_e = event.pressed
 
 
 func _process(delta):
-	var speed = move_speed
-	if Input.is_key_pressed(KEY_SHIFT):
-		speed = fast_speed
+	_update_mouselook()
+	_update_movement(delta)
 
-	var direction = Vector3.ZERO
+func _update_movement(delta):
+	_direction = Vector3((_d as float) - (_a as float), 
+						(_e as float) - (_q as float), 
+						(_s as float) - (_w as float))
+	
+	var offset = _direction.normalized() * _acceleration * _vel_multiplier * delta \
+		+ _velocity.normalized() * _deceleration * _vel_multiplier * delta
+	
+	var speed_multi = 1
+	if _shift: speed_multi *= SHIFT_MULTIPLIER
+	if _alt: speed_multi *= ALT_MULTIPLIER
+	
+	if _direction == Vector3.ZERO and offset.length_squared() > _velocity.length_squared():
+		_velocity = Vector3.ZERO
+	else:
+		_velocity.x = clamp(_velocity.x + offset.x, -_vel_multiplier, _vel_multiplier)
+		_velocity.y = clamp(_velocity.y + offset.y, -_vel_multiplier, _vel_multiplier)
+		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
+	
+		translate(_velocity * delta * speed_multi)
 
-	# WASD movement
-	if Input.is_key_pressed(KEY_W):
-		direction -= transform.basis.z
-	if Input.is_key_pressed(KEY_S):
-		direction += transform.basis.z
-	if Input.is_key_pressed(KEY_A):
-		direction -= transform.basis.x
-	if Input.is_key_pressed(KEY_D):
-		direction += transform.basis.x
-
-	# Move
-	if direction != Vector3.ZERO:
-		translate(direction.normalized() * speed * delta)
+func _update_mouselook():
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		_mouse_position *= sensitivity
+		var yaw = _mouse_position.x
+		var pitch = _mouse_position.y
+		_mouse_position = Vector2(0, 0)
+		
+		pitch = clamp(pitch, -90 - _total_pitch, 90 - _total_pitch)
+		_total_pitch += pitch
+	
+		rotate_y(deg_to_rad(-yaw))
+		rotate_object_local(Vector3(1,0,0), deg_to_rad(-pitch))

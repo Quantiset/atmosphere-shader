@@ -1,25 +1,91 @@
-[gd_scene load_steps=5 format=3 uid="uid://bn1wn8ul1wcpf"]
+[gd_scene load_steps=15 format=3 uid="uid://bn1wn8ul1wcpf"]
 
 [ext_resource type="Script" uid="uid://cj8d8afgkc7lu" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Script" uid="uid://d06uhcgyf4fm1" path="res://Scripts/camera_3d.gd" id="2_bo1nx"]
+[ext_resource type="Shader" uid="uid://crwwcxrca6lbd" path="res://Scripts/Earth.gdshader" id="2_jjvhh"]
+[ext_resource type="Shader" uid="uid://rc0fl3vf0s6u" path="res://Scripts/atmosphere.gdshader" id="3_8gbba"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kry3j"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_21xkr"]
+noise = SubResource("FastNoiseLite_kry3j")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6bp64"]
+frequency = 0.0439
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_344ge"]
+noise = SubResource("FastNoiseLite_6bp64")
+as_normal_map = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ynf5e"]
+render_priority = 0
+shader = ExtResource("2_jjvhh")
+shader_parameter/mountainmap = SubResource("NoiseTexture2D_21xkr")
+shader_parameter/normalmap = SubResource("NoiseTexture2D_344ge")
 
 [sub_resource type="SphereMesh" id="SphereMesh_7u77a"]
+lightmap_size_hint = Vector2i(17, 9)
+material = SubResource("ShaderMaterial_ynf5e")
 
 [sub_resource type="Environment" id="Environment_7u77a"]
 background_mode = 1
 
+[sub_resource type="SphereMesh" id="SphereMesh_8gbba"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jjvhh"]
+render_priority = 0
+shader = ExtResource("3_8gbba")
+shader_parameter/z_near = 0.0
+shader_parameter/z_far = 0.0
+shader_parameter/planet_position = Vector3(0, 0, 0)
+shader_parameter/planet_radius = 0.0
+shader_parameter/atmosphere_radius = 0.0
+shader_parameter/sun_position = Vector3(0, 0, 0)
+shader_parameter/camera_position = Vector3(0, 0, 0)
+shader_parameter/camera_basis = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/min_max_x_y = Vector4(0, 0, 0, 0)
+shader_parameter/ray_distance = 100.0
+shader_parameter/sample_points = 10
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8gbba"]
+material = SubResource("ShaderMaterial_jjvhh")
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_jjgbg")
 
-[node name="Planet1" type="MeshInstance3D" parent="."]
+[node name="Earth" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("SphereMesh_7u77a")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7u77a")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.9522865)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9981038, 0, -0.0615538, 0, 1, 0, 0.0615538, 0, -0.9981038, 0, 0, -271.7304)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Shader" type="ColorRect" parent="CanvasLayer"]
+custom_minimum_size = Vector2(1280, 720)
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Sun" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -91.67713)
+visible = false
+mesh = SubResource("SphereMesh_8gbba")
+
+[node name="Yaw" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Yaw"]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -4.6920485)
+far = 1000.0
 script = ExtResource("2_bo1nx")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.921534)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Yaw/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, -0.985, 0, -0.185)
+mesh = SubResource("PlaneMesh_8gbba")

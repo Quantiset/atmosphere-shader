@@ -14,3 +14,8 @@ config/name="Atmosphere Shader"
 run/main_scene="uid://bn1wn8ul1wcpf"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
