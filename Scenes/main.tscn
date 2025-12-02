@@ -6,10 +6,13 @@
 [ext_resource type="Shader" uid="uid://rc0fl3vf0s6u" path="res://Scripts/atmosphere.gdshader" id="3_8gbba"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_kry3j"]
+frequency = 0.0032
 fractal_type = 2
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_21xkr"]
 noise = SubResource("FastNoiseLite_kry3j")
+seamless = true
+in_3d_space = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_6bp64"]
 frequency = 0.0439
@@ -45,7 +48,7 @@ shader_parameter/sun_position = Vector3(0, 0, 0)
 shader_parameter/camera_position = Vector3(0, 0, 0)
 shader_parameter/camera_basis = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/min_max_x_y = Vector4(0, 0, 0, 0)
-shader_parameter/ray_distance = 100.0
+shader_parameter/density_falloff = 10.0
 shader_parameter/sample_points = 10
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_8gbba"]
@@ -72,6 +75,7 @@ custom_minimum_size = Vector2(1280, 720)
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
+color = Color(0.078431375, 0.78039217, 0.11372549, 1)
 
 [node name="Sun" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -91.67713)
@@ -83,9 +87,9 @@ mesh = SubResource("SphereMesh_8gbba")
 [node name="Camera3D" type="Camera3D" parent="Yaw"]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -4.6920485)
-far = 1000.0
 script = ExtResource("2_bo1nx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Yaw/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, -0.985, 0, -0.185)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0.016749624, 0, -0.07049608)
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_8gbba")

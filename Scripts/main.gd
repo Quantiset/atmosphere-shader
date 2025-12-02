@@ -33,13 +33,18 @@ func _ready():
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("direction_vector", im_tex)
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("sun_position", $Sun.global_position)
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("planet_position", $Earth.global_position)
-	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("planet_radius", 1.)
-	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("atmosphere_radius", 1.6)
+	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("planet_radius", 1.02)
+	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("atmosphere_radius", 3.0)
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("min_max_x_y", Vector4(min_x, max_x, min_y, max_y))
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("z_near", cam.near)
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("z_far", cam.far)
+	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("scattering_coeffs", Vector3(
+		pow(400.0 / 700, 4),
+		pow(400.0 / 530, 4),
+		pow(400.0 / 440, 4)
+	))
 
 func _process(_delta):
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("camera_position", cam.global_position)
 	$Yaw/Camera3D/MeshInstance3D.mesh.material.set_shader_parameter("camera_basis", cam.global_transform.basis)
-	print($Yaw/Camera3D.position)
+	#print($Yaw/Camera3D.position)
