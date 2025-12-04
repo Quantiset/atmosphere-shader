@@ -18,6 +18,10 @@ uniform float density_falloff = 0.0;
 uniform int sample_points = 10;
 uniform vec3 scattering_coeffs;
 
+uniform float R : hint_range(0.0, 1.0) = 1.0;
+uniform float G : hint_range(0.0, 1.0) = 1.0;
+uniform float B : hint_range(0.0, 1.0) = 1.0;
+
 float density_at_point(vec3 point) {
 	float height_above_surface = length(point - planet_position) - planet_radius;
 	float scaled_height = height_above_surface / (atmosphere_radius - planet_radius);
@@ -115,7 +119,7 @@ void fragment() {
 		}
 	}
 	
-	ALBEDO = og_col.rgb * exp(-view_optical_depth) + total_color;
+	ALBEDO = (og_col.rgb * exp(-view_optical_depth) + total_color) * vec3(R,G,B);
 	//ALPHA = 1.0;
 	
 }
