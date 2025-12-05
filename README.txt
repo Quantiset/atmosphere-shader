@@ -16,5 +16,17 @@ If you want to mess any of the follow values:
 	Scattering Coeff
 	Color
 In the Godot UI (program not application), Click on the MeshInstance3D. You should now be in the Inspector Tab (right side of the screen).
-Click on the Black Plane where it says "Mesh", then Click on the Black Sphere where it "Material". You can then manually change each value for 
-the variable above. 
+Click on the Black Plane where it says "Mesh", then Click on the Black Sphere where it "Material". You will then get a dropdown menu in 
+which you can click on "Shader Parameters". To change these values, you must manually type each parameter, updating the program instantly.
+
+We also have strict keybinds to change the camera
+	W: Move Camera Z+
+	S: Move Camera Z-
+	A: Move Camera Y+
+	D: Move Camera Y-
+	Q: Move Camera X+
+	E: Move Camera X-
+	Mouse Wheel Down: Increase Camera Move Speed
+	Mouse Wheel Up: Decrease Camera Move Speed
+	shift: Increase Speed Mutiplier
+	alt: Increase Speed Multipler
