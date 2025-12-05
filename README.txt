@@ -15,9 +15,7 @@ If you want to mess any of the follow values:
 	Camera Basis
 	Scattering Coeff
 	Color
-In the Godot UI (program not application), Click on the MeshInstance3D. You should now be in the Inspector Tab (right side of the screen).
-Click on the Black Plane where it says "Mesh", then Click on the Black Sphere where it "Material". You will then get a dropdown menu in 
-which you can click on "Shader Parameters". To change these values, you must manually type each parameter, updating the program instantly.
+In the Godot UI (program not application), Click on the MeshInstance3D. You should now be in the Inspector Tab (right side of the screen). Click on the Black Plane where it says "Mesh", then Click on the Black Sphere where it "Material". You will then get a dropdown menu in which you can click on "Shader Parameters". To change these values, you must manually type each parameter, updating the program instantly.
 
 We also have strict keybinds to change the camera
 	W: Move Camera Z+
